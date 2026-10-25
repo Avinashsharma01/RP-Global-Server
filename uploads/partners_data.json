@@ -1,0 +1,98 @@
+[
+  {
+    "_id": "partner-1",
+    "name": "Tata Chemicals Ltd",
+    "category": "Industrial Enterprise",
+    "logoUrl": "/images/partners/tata.svg",
+    "website": "https://www.tatachemicals.com",
+    "description": "1,200 KLD ZLD Effluent Recovery & Desalination Infrastructure",
+    "order": 1,
+    "isActive": true,
+    "createdAt": "2026-10-24T10:28:10.128Z",
+    "updatedAt": "2026-10-24T10:28:10.128Z"
+  },
+  {
+    "_id": "partner-2",
+    "name": "Cipla Pharmaceuticals",
+    "category": "Pharma & Biotech",
+    "logoUrl": "/uploads/1792842756764-RP_Global_Projects_3D_Water.png",
+    "website": "https://www.cipla.com",
+    "description": "Ultra-pure Demineralized Water (DM) & Sanitary RO Skids",
+    "order": 2,
+    "isActive": true,
+    "createdAt": "2026-10-24T10:28:10.128Z",
+    "updatedAt": "2026-10-24T11:52:36.774Z"
+  },
+  {
+    "_id": "partner-3",
+    "name": "Reliance Industries Limited",
+    "category": "Industrial Enterprise",
+    "logoUrl": "/uploads/1792842774431-RP_Global_Projects_3D_Water_Emblem.png",
+    "website": "https://www.ril.com",
+    "description": "Heavy Hydrocarbon & Petrochemical ETP Clarification Systems",
+    "order": 3,
+    "isActive": true,
+    "createdAt": "2026-10-24T10:28:10.128Z",
+    "updatedAt": "2026-10-24T11:52:54.438Z"
+  },
+  {
+    "_id": "partner-4",
+    "name": "Grundfos Water Technology",
+    "category": "OEM Equipment Partner",
+    "logoUrl": "/images/partners/grundfos.svg",
+    "website": "https://www.grundfos.com",
+    "description": "High-Efficiency Submersible & Multistage Booster Pump Skids",
+    "order": 4,
+    "isActive": true,
+    "createdAt": "2026-10-24T10:28:10.128Z",
+    "updatedAt": "2026-10-24T10:28:10.128Z"
+  },
+  {
+    "_id": "partner-5",
+    "name": "Larsen & Toubro (L&T)",
+    "category": "EPC & Infrastructure",
+    "logoUrl": "/images/partners/lt.svg",
+    "website": "https://www.larsentoubro.com",
+    "description": "Turnkey Municipal & Mega Industrial Effluent Treatment EPC",
+    "order": 5,
+    "isActive": true,
+    "createdAt": "2026-10-24T10:28:10.128Z",
+    "updatedAt": "2026-10-24T10:28:10.128Z"
+  },
+  {
+    "_id": "partner-6",
+    "name": "Dow Water & Process Solutions",
+    "category": "Technology Licensor",
+    "logoUrl": "/images/partners/dow.svg",
+    "website": "https://www.dow.com",
+    "description": "FilmTec™ Reverse Osmosis & Ion Exchange Resin Media",
+    "order": 6,
+    "isActive": true,
+    "createdAt": "2026-10-24T10:28:10.128Z",
+    "updatedAt": "2026-10-24T10:28:10.128Z"
+  },
+  {
+    "_id": "partner-7",
+    "name": "Thermax Global",
+    "category": "Technology Licensor",
+    "logoUrl": "/images/partners/thermax.svg",
+    "website": "https://www.thermaxglobal.com",
+    "description": "Condensate Polishing Units & Boiler Feed Demineralizers",
+    "order": 7,
+    "isActive": true,
+    "createdAt": "2026-10-24T10:28:10.128Z",
+    "updatedAt": "2026-10-24T10:28:10.128Z"
+  },
+  {
+    "_id": "partner-8",
+    "name": "Sun Pharma Laboratories",
+    "category": "Pharma & Biotech",
+    "logoUrl": "/images/partners/sunpharma.svg",
+    "website": "https://sunpharma.com",
+    "description": "Zero Discharge Sterile API Wastewater Treatment Systems",
+    "order": 8,
+    "isActive": true,
+    "createdAt": "2026-10-24T10:28:10.128Z",
+    "updatedAt": "2026-10-24T10:28:10.128Z"
+  }
+]

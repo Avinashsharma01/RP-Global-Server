@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 70" width="260" height="70">
+  <g transform="translate(10, 10)">
+    <rect x="0" y="0" width="48" height="48" rx="8" fill="#003366"/>
+    <polygon points="12,38 24,12 36,38" fill="#E31837"/>
+    <polygon points="18,34 24,18 30,34" fill="#FFFFFF"/>
+  </g>
+  <text x="70" y="38" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="900" fill="#003366" letter-spacing="1">Reliance</text>
+  <text x="71" y="52" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" fill="#E31837" letter-spacing="2">INDUSTRIES LIMITED</text>
+</svg>

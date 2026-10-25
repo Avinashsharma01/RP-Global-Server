@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 70" width="240" height="70">
+  <path d="M 45 10 C 22 10 10 24 10 40 C 10 52 18 60 30 60 C 40 60 48 53 50 43 L 42 43 C 40 48 35 52 29 52 C 21 52 17 46 17 38 C 17 28 26 18 45 18 C 64 18 73 28 73 38 C 73 46 69 52 61 52 C 55 52 50 48 48 43 L 40 43 C 42 53 50 60 60 60 C 72 60 80 52 80 40 C 80 24 68 10 45 10 Z" fill="#005A9C"/>
+  <rect x="42" y="24" width="6" height="32" rx="2" fill="#005A9C"/>
+  <text x="95" y="44" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="900" fill="#005A9C" letter-spacing="4">TATA</text>
+</svg>

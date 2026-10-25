@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 70" width="250" height="70">
+  <g transform="translate(10, 10)">
+    <circle cx="24" cy="24" r="16" fill="#F37021"/>
+    <path d="M 24 2 L 24 8 M 24 40 L 24 46 M 2 24 L 8 24 M 40 24 L 46 24 M 8.5 8.5 L 12.5 12.5 M 35.5 35.5 L 39.5 39.5 M 8.5 39.5 L 12.5 35.5 M 35.5 12.5 L 39.5 8.5" stroke="#F37021" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <text x="68" y="38" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="900" fill="#231F20" letter-spacing="1">SUN PHARMA</text>
+  <text x="69" y="52" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" fill="#F37021" letter-spacing="1">LABORATORIES</text>
+</svg>

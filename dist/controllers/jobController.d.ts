@@ -1,0 +1,10 @@
+import { Request, Response } from "express";
+import { AuthenticatedRequest } from "../middlewares/auth";
+export declare const getJobs: (req: Request, res: Response) => Promise<void>;
+export declare const getJobBySlugOrId: (req: Request, res: Response) => Promise<void>;
+export declare const applyForJob: (req: Request, res: Response) => Promise<void>;
+export declare const createJob: (req: AuthenticatedRequest, res: Response) => Promise<void>;
+export declare const updateJob: (req: AuthenticatedRequest, res: Response) => Promise<void>;
+export declare const deleteJob: (req: AuthenticatedRequest, res: Response) => Promise<void>;
+export declare const getJobApplications: (req: AuthenticatedRequest, res: Response) => Promise<void>;
+export declare const updateApplicationStatus: (req: AuthenticatedRequest, res: Response) => Promise<void>;

@@ -1,0 +1,139 @@
+[
+  {
+    "_id": "faq-1",
+    "question": "What types of industrial water and wastewater treatment plants does RP Global design and manufacture?",
+    "answer": "RP Global Projects engineers, manufactures, and commissions a complete turnkey portfolio: Sewage Treatment Plants (STP) using MBBR, SBR, and MBR technologies; Effluent Treatment Plants (ETP) with chemical, biological, and tertiary polishing; Industrial Reverse Osmosis (RO) plants; Demineralization (DM) two-bed and mixed-bed systems; Industrial Water Softeners; and Zero Liquid Discharge (ZLD) plants with Multi-Effect Evaporators (MEE) and ATFDs.",
+    "category": "General",
+    "order": 1,
+    "isActive": true,
+    "tags": [
+      "EPC",
+      "Plant Types",
+      "Turnkey"
+    ],
+    "createdAt": "2026-10-24T10:29:38.455Z",
+    "updatedAt": "2026-10-24T10:29:38.455Z"
+  },
+  {
+    "_id": "faq-2",
+    "question": "How does RP Global ensure compliance with CPCB and State Pollution Control Board (SPCB) discharge norms?",
+    "answer": "Every plant is custom-engineered around the client's inlet effluent characteristics (BOD, COD, TSS, TDS, Heavy Metals, pH) and designed strictly to meet or exceed CPCB/SPCB discharge standards. We provide treated effluent quality guarantees, process validation reports, and integrate online Continuous Emission/Effluent Monitoring Systems (OCEMS) with cloud telemetry directly linked to SPCB/CPCB server gateways.",
+    "category": "Compliance & Approvals",
+    "order": 2,
+    "isActive": true,
+    "tags": [
+      "CPCB",
+      "SPCB",
+      "OCEMS",
+      "Compliance"
+    ],
+    "createdAt": "2026-10-24T10:29:38.455Z",
+    "updatedAt": "2026-10-24T10:29:38.455Z"
+  },
+  {
+    "_id": "faq-3",
+    "question": "What is the difference between MBBR, SBR, and MBR technologies for STP plants?",
+    "answer": "Moving Bed Biofilm Reactor (MBBR) uses virgin plastic media carriers for compact biological digestion with minimal footprint and low maintenance. Sequencing Batch Reactor (SBR) operates in batch phases (fill, react, settle, decant) offering high biological nutrient removal without separate clarifiers. Membrane Bioreactor (MBR) combines biological treatment with ultrafiltration membranes (<0.04 micron), producing crystal-clear water with BOD < 5 mg/L suitable for direct cooling tower reuse and flushing.",
+    "category": "STP & ETP Plants",
+    "order": 3,
+    "isActive": true,
+    "tags": [
+      "STP",
+      "MBBR",
+      "SBR",
+      "MBR"
+    ],
+    "createdAt": "2026-10-24T10:29:38.455Z",
+    "updatedAt": "2026-10-24T10:29:38.455Z"
+  },
+  {
+    "_id": "faq-4",
+    "question": "What is Zero Liquid Discharge (ZLD) and when is it required for industrial facilities?",
+    "answer": "Zero Liquid Discharge (ZLD) is an advanced wastewater treatment process where all industrial effluent is purified, recycled back into operations, and concentrated into solid dry salts—leaving zero liquid discharge into municipal drains or surrounding environment. ZLD is mandatory for highly polluting 'Red Category' industries (Textiles, Distilleries, Pharmaceuticals, Tannery, Petrochemicals) under CPCB mandates.",
+    "category": "STP & ETP Plants",
+    "order": 4,
+    "isActive": true,
+    "tags": [
+      "ZLD",
+      "MEE",
+      "Effluent",
+      "Recycling"
+    ],
+    "createdAt": "2026-10-24T10:29:38.455Z",
+    "updatedAt": "2026-10-24T10:29:38.455Z"
+  },
+  {
+    "_id": "faq-5",
+    "question": "What conductivity and purity levels can RP Global Demineralization (DM) plants achieve?",
+    "answer": "Our two-bed ion exchange DM systems (SAC + SBA) consistently produce treated water with electrical conductivity < 10 µS/cm. When integrated with a Mixed Bed (MB) Polishing unit or Electrodeionization (EDI), conductivity drops below 0.1 µS/cm with reactive silica < 0.02 ppm, satisfying critical boiler feedwater requirements (IBR standards) and USP-grade pharmaceutical formulations.",
+    "category": "RO & DM Systems",
+    "order": 5,
+    "isActive": true,
+    "tags": [
+      "DM Plant",
+      "Conductivity",
+      "Ion Exchange",
+      "Boiler Feed"
+    ],
+    "createdAt": "2026-10-24T10:29:38.455Z",
+    "updatedAt": "2026-10-24T10:29:38.455Z"
+  },
+  {
+    "_id": "faq-6",
+    "question": "What is the typical project execution timeline from order placement to commercial commissioning?",
+    "answer": "Turnkey project execution typically ranges from 4 to 8 weeks for packaged skid-mounted systems (10 KLD to 250 KLD), and 12 to 24 weeks for large-scale custom civil-reinforced EPC installations (500 KLD to 10,000+ KLD). Timeline includes detailed engineering drawings (P&ID, GA), statutory vetting, fabrication, factory acceptance testing (FAT), on-site installation, and wet commissioning with bacterial seeding.",
+    "category": "General",
+    "order": 6,
+    "isActive": true,
+    "tags": [
+      "Timeline",
+      "EPC",
+      "Commissioning"
+    ],
+    "createdAt": "2026-10-24T10:29:38.455Z",
+    "updatedAt": "2026-10-24T10:29:38.455Z"
+  },
+  {
+    "_id": "faq-7",
+    "question": "Do you offer Annual Maintenance Contracts (AMC) and Plant Operation & Maintenance (O&M)?",
+    "answer": "Yes. RP Global provides full-spectrum Operation & Maintenance (O&M) contracts with dedicated, trained site engineers, chemical dosing management, daily laboratory testing logs, preventative maintenance, and statutory audit compliance. We also offer Comprehensive and Non-Comprehensive AMCs with 24/7 breakdown support across North India.",
+    "category": "Operations & Maintenance",
+    "order": 7,
+    "isActive": true,
+    "tags": [
+      "AMC",
+      "O&M",
+      "Maintenance",
+      "Service"
+    ],
+    "createdAt": "2026-10-24T10:29:38.455Z",
+    "updatedAt": "2026-10-24T10:29:38.455Z"
+  },
+  {
+    "_id": "faq-8",
+    "question": "Can RP Global retrofit, upgrade, or expand existing under-performing water treatment plants?",
+    "answer": "Absolutely. We specialize in plant audits and brownfield upgrades. Typical revamps include upgrading conventional ASP/civil plants to high-rate MBBR/MBR to double throughput within the same physical tanks, replacing aging sand/carbon filters with automated multi-port disc filtration, upgrading RO membranes, and retrofitting PLC/SCADA automation.",
+    "category": "Operations & Maintenance",
+    "order": 8,
+    "isActive": true,
+    "tags": [
+      "Retrofit",
+      "Upgrade",
+      "Audits",
+      "Capacity Expansion"
+    ],
+    "createdAt": "2026-10-24T10:29:38.455Z",
+    "updatedAt": "2026-10-24T10:29:38.455Z"
+  },
+  {
+    "_id": "faq-1792838266161",
+    "question": "Can RP Global install containerized mobile STP units?",
+    "answer": "Yes, we build plug-and-play ISO containerized STP units ready for rapid deployment at mining camps, remote industrial setups, and temporary construction sites.",
+    "category": "General",
+    "order": 9,
+    "isActive": true,
+    "tags": [],
+    "createdAt": "2026-10-24T10:37:46.161Z",
+    "updatedAt": "2026-10-24T10:43:31.547Z"
+  }
+]
