@@ -32,30 +32,18 @@ export const authenticate = async (
 
     const token = authHeader.split(" ")[1];
 
-    if (token === "demo_token_rpglobal_2026" || token?.startsWith("demo_")) {
-      req.user = {
-        _id: "demo-admin-id",
-        email: "admin@rpglobalprojects.com",
-        fullName: "RP Global Administration Desk",
-        role: "SUPER_ADMIN",
-        isActive: true,
-      } as any;
-      return next();
-    }
-
     const jwtSecret =
       process.env.JWT_SECRET || "rpglobal_enterprise_secret_key_2026_industrial_clean_tech";
 
     const decoded = jwt.verify(token, jwtSecret) as JwtPayload;
 
     if (!isDBConnected()) {
-      req.user = {
-        _id: decoded.id,
-        email: decoded.email,
-        role: decoded.role || "SUPER_ADMIN",
-        isActive: true,
-      } as any;
-      return next();
+      res.status(503).json({
+        success: false,
+        message: "Authentication service is temporarily unavailable.",
+        code: "DATABASE_UNAVAILABLE",
+      });
+      return;
     }
 
     const user = await User.findById(decoded.id).select("-password");
@@ -78,11 +66,10 @@ export const authenticate = async (
 
     req.user = user;
     next();
-  } catch (error: any) {
+  } catch {
     res.status(401).json({
       success: false,
       message: "Session expired or invalid token. Please log in again.",
-      error: error.message,
     });
   }
 };

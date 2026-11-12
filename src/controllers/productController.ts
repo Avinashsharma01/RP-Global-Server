@@ -35,7 +35,10 @@ export const getProductBySlug = async (
 ): Promise<void> => {
   try {
     const slug = String(req.params.slug);
-    const product = await Product.findOne({ slug: slug.toLowerCase() });
+    const product = await Product.findOne({
+      slug: slug.toLowerCase(),
+      isPublished: true,
+    });
 
     if (!product) {
       res.status(404).json({

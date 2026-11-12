@@ -9,6 +9,7 @@ import {
   togglePartnerStatus,
 } from "../controllers/partnerController";
 import { uploadPartnerLogo } from "../middlewares/upload";
+import { authenticate, requireRole } from "../middlewares/auth";
 
 const router = Router();
 
@@ -16,21 +17,21 @@ const router = Router();
 router.get("/", getPartners);
 
 // Admin route: Get all partners (including inactive)
-router.get("/all", getAllPartners);
+router.get("/all", authenticate, requireRole("SUPER_ADMIN", "EDITOR"), getAllPartners);
 
 // Get single partner
 router.get("/:id", getPartnerById);
 
 // Admin route: Create partner with logo upload
-router.post("/", uploadPartnerLogo, createPartner);
+router.post("/", authenticate, requireRole("SUPER_ADMIN", "EDITOR"), uploadPartnerLogo, createPartner);
 
 // Admin route: Update partner
-router.put("/:id", uploadPartnerLogo, updatePartner);
+router.put("/:id", authenticate, requireRole("SUPER_ADMIN", "EDITOR"), uploadPartnerLogo, updatePartner);
 
 // Admin route: Toggle active status
-router.patch("/:id/toggle", togglePartnerStatus);
+router.patch("/:id/toggle", authenticate, requireRole("SUPER_ADMIN", "EDITOR"), togglePartnerStatus);
 
 // Admin route: Delete partner
-router.delete("/:id", deletePartner);
+router.delete("/:id", authenticate, requireRole("SUPER_ADMIN"), deletePartner);
 
 export default router;

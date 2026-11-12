@@ -1,5 +1,8 @@
+/// <reference types="jest" />
+
 import request from "supertest";
 import { app } from "../src/app";
+import { describe, it } from "node:test";
 
 describe("Authentication & Authorization API (/api/v1/auth)", () => {
   let adminToken: string;
@@ -19,10 +22,19 @@ describe("Authentication & Authorization API (/api/v1/auth)", () => {
     expect(res.body.success).toBe(false);
   });
 
+  it("should reject the previously accepted agency demo account", async () => {
+    const res = await request(app).post("/api/v1/auth/login").send({
+      email: "admin@agency.com",
+      password: "Admin@RPGlobal2026!",
+    });
+    expect(res.status).toBe(401);
+    expect(res.body.success).toBe(false);
+  });
+
   it("should succeed login with 200 and return JWT for valid admin", async () => {
     const res = await request(app).post("/api/v1/auth/login").send({
       email: "admin@rpglobalprojects.com",
-      password: "AdminSecurePass2026!",
+      password: "Admin@RPGlobal2026!",
     });
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
@@ -38,12 +50,20 @@ describe("Authentication & Authorization API (/api/v1/auth)", () => {
     expect(res.body.success).toBe(false);
   });
 
+  it("should reject demo bearer tokens", async () => {
+    const res = await request(app)
+      .get("/api/v1/auth/me")
+      .set("Authorization", "Bearer demo_token_rpglobal_2026");
+
+    expect(res.status).toBe(401);
+    expect(res.body.success).toBe(false);
+  });
+
   it("should succeed /me with 200 when valid bearer token is provided", async () => {
-    // If adminToken is not set from previous test, log in first
     if (!adminToken) {
       const loginRes = await request(app).post("/api/v1/auth/login").send({
         email: "admin@rpglobalprojects.com",
-        password: "AdminSecurePass2026!",
+        password: "Admin@RPGlobal2026!",
       });
       adminToken = loginRes.body.token;
     }
@@ -65,4 +85,19 @@ describe("Authentication & Authorization API (/api/v1/auth)", () => {
     expect(res.body.success).toBe(true);
   });
 });
+
+function expect(actual: unknown) {
+  return {
+    toBe(expected: unknown) {
+      if (actual !== expected) {
+        throw new Error(`Expected ${String(actual)} to be ${String(expected)}`);
+      }
+    },
+    toBeDefined() {
+      if (actual === undefined) {
+        throw new Error("Expected value to be defined");
+      }
+    },
+  };
+}
 
