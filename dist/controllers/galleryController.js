@@ -36,7 +36,7 @@ const createGalleryItem = async (req, res) => {
         const { title, category, capacityKLD, location, clientSector, status = "COMPLETED", progressPercentage = 100, currentStage = "Commissioned & Handed Over", expectedCompletion = "", keyHighlights, isFeatured, completionYear, } = req.body;
         let imageUrl = req.body.imageUrl;
         if (req.file) {
-            imageUrl = `/uploads/${req.file.filename}`;
+            imageUrl = req.file.path;
         }
         if (!title || !category || !capacityKLD || !location || !clientSector || !imageUrl) {
             res.status(400).json({
@@ -174,7 +174,7 @@ const updateGalleryItem = async (req, res) => {
             }
         }
         if (req.file) {
-            item.imageUrl = `/uploads/${req.file.filename}`;
+            item.imageUrl = req.file.path;
             // Add to images list if not present
             if (!item.images)
                 item.images = [];
@@ -236,7 +236,7 @@ const uploadProjectImages = async (req, res) => {
         // Files uploaded via multipart
         if (req.files && Array.isArray(req.files)) {
             req.files.forEach((file) => {
-                newImageUrls.push(`/uploads/${file.filename}`);
+                newImageUrls.push(file.path);
             });
         }
         // Direct image URL or URLs sent in body

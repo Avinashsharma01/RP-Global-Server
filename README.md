@@ -11,7 +11,7 @@ Production-ready Node.js, Express, and TypeScript REST API powered by **MongoDB 
 * **Language:** TypeScript 5 (Target ES2022, CommonJS output in `dist/`)
 * **Database & ODM:** [MongoDB](https://www.mongodb.com/) via [Mongoose](https://mongoosejs.com/) (v8.10)
 * **Authentication:** [JSON Web Tokens (JWT)](https://jwt.io/) & [bcryptjs](https://github.com/dcodeIO/bcrypt.js)
-* **File Uploads:** [Multer](https://github.com/expressjs/multer) (Disk storage in `uploads/` with 10MB limit)
+* **File Uploads:** [Multer](https://github.com/expressjs/multer) with [Cloudinary](https://cloudinary.com/) storage for images/videos and local disk storage for resumes and water reports
 * **Security & Utility:** [Helmet](https://helmetjs.github.io/), CORS, Morgan (HTTP logger), Zod (Validation), TSX (TypeScript execution engine)
 
 ---
@@ -52,7 +52,7 @@ server/
 │   ├── seed/
 │   │   └── seed.ts                    # Complete seed script populating 6 plants, jobs, gallery & admin
 │   └── index.ts                       # Express app entrypoint & middleware pipeline
-├── uploads/                           # Local storage for resumes, reports, and project images
+├── uploads/                           # Local storage for resumes and water reports
 ├── package.json
 ├── tsconfig.json
 └── .env
@@ -127,7 +127,7 @@ Base URL: `http://localhost:5000/api/v1`
 
 ### 6. Project Gallery (`/gallery`)
 * `GET /gallery` — *(Public)* List commissioned plant installations (supports `?category=...`).
-* `POST /gallery` — *(Admin)* Upload new installation project with photo (`multipart/form-data`).
+* `POST /gallery` — *(Admin)* Upload new installation project with a Cloudinary-backed image or video (`multipart/form-data`).
 * `DELETE /gallery/:id` — *(Admin)* Delete gallery item.
 
 ### 7. Operations Analytics (`/admin`)
@@ -145,7 +145,14 @@ NODE_ENV=development
 MONGO_URI=mongodb://127.0.0.1:27017/rpglobal
 JWT_SECRET=rpglobal_super_secret_jwt_key_2026_industrial_clean_tech
 CLIENT_URL=http://localhost:3000
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+CLOUDINARY_FOLDER=rp-global
+CLOUDINARY_MAX_FILE_SIZE_MB=100
 ```
+
+Gallery, partner, and certificate image uploads are stored in Cloudinary and their secure URLs are saved in MongoDB. Configure all three required Cloudinary credentials before using those upload endpoints. Resume and water-report uploads continue to use the local `uploads/` directory.
 
 ---
 

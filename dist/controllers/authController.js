@@ -3,9 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updatePassword = exports.getMe = exports.login = void 0;
+exports.resetPassword = exports.forgotPassword = exports.updatePassword = exports.getMe = exports.login = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const crypto_1 = __importDefault(require("crypto"));
 const User_1 = require("../models/User");
+const emailService_1 = require("../services/emailService");
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -127,4 +129,102 @@ const updatePassword = async (req, res) => {
     }
 };
 exports.updatePassword = updatePassword;
+/**
+ * Request password reset link (public)
+ */
+const forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email) {
+            res.status(400).json({
+                success: false,
+                message: "Email is required to request a password reset.",
+            });
+            return;
+        }
+        const user = await User_1.User.findOne({ email: email.toLowerCase().trim() });
+        if (!user) {
+            // Return 200 with generic success to prevent email enumeration
+            res.status(200).json({
+                success: true,
+                message: "If an administrator account with that email exists, a password reset link has been dispatched.",
+            });
+            return;
+        }
+        // Get reset token and save
+        const resetToken = user.getResetPasswordToken();
+        await user.save();
+        // Reset URL
+        const clientUrl = process.env.CLIENT_URL || "http://localhost:3000";
+        const resetUrl = `${clientUrl}/admin/reset-password/${resetToken}`;
+        // Send email asynchronously
+        void emailService_1.emailService.sendPasswordResetEmail(user.email, resetUrl, user.fullName);
+        res.status(200).json({
+            success: true,
+            message: "If an administrator account with that email exists, a password reset link has been dispatched.",
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Could not process password reset request.",
+            error: error.message,
+        });
+    }
+};
+exports.forgotPassword = forgotPassword;
+/**
+ * Reset password with valid token (public)
+ */
+const resetPassword = async (req, res) => {
+    try {
+        const { token } = req.params;
+        const { newPassword } = req.body;
+        if (!newPassword || newPassword.length < 6) {
+            res.status(400).json({
+                success: false,
+                message: "New password must be at least 6 characters long.",
+            });
+            return;
+        }
+        const rawToken = Array.isArray(token) ? token[0] : token;
+        if (!rawToken) {
+            res.status(400).json({
+                success: false,
+                message: "Invalid reset token provided.",
+            });
+            return;
+        }
+        // Hash the token from url params to compare with database
+        const hashedToken = crypto_1.default.createHash("sha256").update(rawToken).digest("hex");
+        const user = await User_1.User.findOne({
+            resetPasswordToken: hashedToken,
+            resetPasswordExpire: { $gt: new Date() },
+        }).select("+password");
+        if (!user) {
+            res.status(400).json({
+                success: false,
+                message: "Password reset link is invalid or has expired.",
+            });
+            return;
+        }
+        // Set new password
+        user.password = newPassword;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
+        await user.save();
+        res.status(200).json({
+            success: true,
+            message: "Password has been successfully updated. You may now log in.",
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Could not reset password.",
+            error: error.message,
+        });
+    }
+};
+exports.resetPassword = resetPassword;
 //# sourceMappingURL=authController.js.map

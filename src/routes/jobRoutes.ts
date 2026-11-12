@@ -11,13 +11,14 @@ import {
 } from "../controllers/jobController";
 import { authenticate, requireRole } from "../middlewares/auth";
 import { uploadResume } from "../middlewares/upload";
+import { jobApplyLimiter } from "../middlewares/rateLimiter";
 
 const router = Router();
 
 // Public routes
 router.get("/", getJobs);
 router.get("/:identifier", getJobBySlugOrId);
-router.post("/:id/apply", uploadResume, applyForJob);
+router.post("/:id/apply", jobApplyLimiter, uploadResume, applyForJob);
 
 // Admin recruitment ATS routes
 router.post("/", authenticate, requireRole("SUPER_ADMIN", "HR_MANAGER"), createJob);

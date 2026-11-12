@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { ensureLocalMongo, stopLocalMongo } from "./localMongo";
 
 // Disable command buffering so queries fail immediately when DB is disconnected
 mongoose.set("bufferCommands", false);
@@ -11,6 +12,18 @@ export const connectDB = async (): Promise<boolean> => {
   }
 
   const mongoURI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/rpglobal";
+
+  // If local connection specified, ensure persistent local MongoDB is running
+  const isLocal = mongoURI.includes("127.0.0.1") || mongoURI.includes("localhost");
+  if (isLocal) {
+    try {
+      const portMatch = mongoURI.match(/:(\d+)/);
+      const port = portMatch ? parseInt(portMatch[1], 10) : 27017;
+      await ensureLocalMongo(port);
+    } catch (err: any) {
+      console.warn("[MongoDB Warning] Could not ensure local MongoDB:", err.message);
+    }
+  }
 
   try {
     // Event listeners
@@ -27,7 +40,7 @@ export const connectDB = async (): Promise<boolean> => {
     });
 
     await mongoose.connect(mongoURI, {
-      serverSelectionTimeoutMS: 3000,
+      serverSelectionTimeoutMS: 5000,
     });
 
     console.log(`[MongoDB] Connected to database: ${mongoose.connection.name}`);
@@ -49,4 +62,5 @@ export const disconnectDB = async (): Promise<void> => {
     await mongoose.disconnect();
     console.log("[MongoDB] Disconnected successfully.");
   }
+  await stopLocalMongo();
 };

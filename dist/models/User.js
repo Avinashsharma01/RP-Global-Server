@@ -39,6 +39,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const crypto_1 = __importDefault(require("crypto"));
 const userSchema = new mongoose_1.Schema({
     email: {
         type: String,
@@ -71,6 +72,12 @@ const userSchema = new mongoose_1.Schema({
     lastLogin: {
         type: Date,
     },
+    resetPasswordToken: {
+        type: String,
+    },
+    resetPasswordExpire: {
+        type: Date,
+    },
 }, {
     timestamps: true,
 });
@@ -90,6 +97,19 @@ userSchema.pre("save", async function (next) {
 // Instance method to check password
 userSchema.methods.comparePassword = async function (candidatePassword) {
     return bcryptjs_1.default.compare(candidatePassword, this.password);
+};
+// Generate and hash password reset token (valid for 1 hour)
+userSchema.methods.getResetPasswordToken = function () {
+    // Generate random 32-byte hex token
+    const resetToken = crypto_1.default.randomBytes(32).toString("hex");
+    // Hash token and store on user model
+    this.resetPasswordToken = crypto_1.default
+        .createHash("sha256")
+        .update(resetToken)
+        .digest("hex");
+    // Set expire time to 1 hour from now
+    this.resetPasswordExpire = new Date(Date.now() + 60 * 60 * 1000);
+    return resetToken;
 };
 exports.User = mongoose_1.default.models.User || mongoose_1.default.model("User", userSchema);
 //# sourceMappingURL=User.js.map

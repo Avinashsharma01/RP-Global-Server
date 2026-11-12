@@ -3,23 +3,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose_1 = __importDefault(require("mongoose"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const path_1 = __importDefault(require("path"));
 // Load environment variables
 dotenv_1.default.config({ path: path_1.default.resolve(__dirname, "../../.env") });
+const db_1 = require("../config/db");
 const User_1 = require("../models/User");
 const Product_1 = require("../models/Product");
 const JobOpening_1 = require("../models/JobOpening");
 const ProjectGallery_1 = require("../models/ProjectGallery");
 const ClientTestimonial_1 = require("../models/ClientTestimonial");
 const FAQ_1 = require("../models/FAQ");
+const Certificate_1 = require("../models/Certificate");
+const Partner_1 = require("../models/Partner");
+const LandingSection_1 = require("../models/LandingSection");
 const initialFaqs_1 = require("../data/initialFaqs");
+const certificateController_1 = require("../controllers/certificateController");
+const partnerController_1 = require("../controllers/partnerController");
+const initialLandingContent_1 = require("../data/initialLandingContent");
 const seedData = async () => {
-    const mongoURI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/rpglobal";
-    console.log(`[Seed Script] Connecting to MongoDB: ${mongoURI}`);
+    console.log(`[Seed Script] Initializing database connection...`);
     try {
-        await mongoose_1.default.connect(mongoURI);
+        const connected = await (0, db_1.connectDB)();
+        if (!connected) {
+            throw new Error("Failed to establish database connection for seeding.");
+        }
         console.log("[Seed Script] Connected successfully.");
         // 1. Seed Default Admin User
         const existingAdmin = await User_1.User.findOne({ email: "admin@rpglobalprojects.com" });
@@ -786,9 +794,28 @@ const seedData = async () => {
         await FAQ_1.FAQ.deleteMany({});
         await FAQ_1.FAQ.insertMany(initialFaqs_1.INITIAL_FAQS.map(({ _id, ...rest }) => rest));
         console.log(`✔ Successfully seeded ${initialFaqs_1.INITIAL_FAQS.length} industrial FAQs.`);
+        // 7. Clear and Seed Authentic Certificates
+        await Certificate_1.Certificate.deleteMany({});
+        await Certificate_1.Certificate.insertMany(certificateController_1.DEFAULT_CERTIFICATES);
+        console.log(`✔ Successfully seeded ${certificateController_1.DEFAULT_CERTIFICATES.length} authentic industry certificates.`);
+        // 8. Clear and Seed Industrial Partners
+        await Partner_1.Partner.deleteMany({});
+        await Partner_1.Partner.insertMany(partnerController_1.DEFAULT_PARTNERS.map(({ _id, ...rest }) => rest));
+        console.log(`✔ Successfully seeded ${partnerController_1.DEFAULT_PARTNERS.length} industrial partners.`);
+        // 9. Clear and Seed Landing Page Content Sections
+        await LandingSection_1.LandingSection.deleteMany({});
+        const sectionEntries = Object.entries(initialLandingContent_1.INITIAL_LANDING_CONTENT).map(([sectionKey, data]) => ({
+            sectionKey,
+            data,
+            isPublished: true,
+            lastUpdatedBy: "RP Global Administration Desk",
+        }));
+        await LandingSection_1.LandingSection.insertMany(sectionEntries);
+        console.log(`✔ Successfully seeded ${sectionEntries.length} landing page CMS sections.`);
         console.log("\n=======================================================");
         console.log("  ALL RP GLOBAL INDUSTRIAL DATA SEEDED SUCCESSFULLY!    ");
         console.log("=======================================================\n");
+        await (0, db_1.disconnectDB)();
         process.exit(0);
     }
     catch (error) {

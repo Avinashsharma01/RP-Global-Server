@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Lead } from "../models/Lead";
 import { AuthenticatedRequest } from "../middlewares/auth";
+import { emailService } from "../services/emailService";
 
 export const submitRFQ = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -44,7 +45,9 @@ export const submitRFQ = async (req: Request, res: Response): Promise<void> => {
     let attachedReportUrl = undefined;
     let attachedReportFilename = undefined;
     if (req.file) {
-      attachedReportUrl = `/uploads/${req.file.filename}`;
+      attachedReportUrl = req.file.path.startsWith("http")
+        ? req.file.path
+        : `/uploads/${req.file.filename}`;
       attachedReportFilename = req.file.originalname;
     }
 
@@ -67,11 +70,20 @@ export const submitRFQ = async (req: Request, res: Response): Promise<void> => {
 
     await lead.save();
 
+    // Trigger transactional notifications asynchronously without blocking HTTP response
+    Promise.all([
+      emailService.sendNewRFQToAdmin(lead),
+      emailService.sendRFQConfirmationToClient(lead),
+    ]).catch((err) => {
+      console.warn("[Email Notification Warning] Failed to dispatch RFQ emails:", err.message);
+    });
+
     res.status(201).json({
       success: true,
       message:
         "Thank you! Your Technical RFQ has been registered. Our engineering desk will review your water parameters and contact you shortly.",
       leadId: lead._id,
+      data: lead,
     });
   } catch (error: any) {
     res.status(500).json({

@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateApplicationStatus = exports.getJobApplications = exports.deleteJob = exports.updateJob = exports.createJob = exports.applyForJob = exports.getJobBySlugOrId = exports.getJobs = void 0;
 const JobOpening_1 = require("../models/JobOpening");
 const JobApplication_1 = require("../models/JobApplication");
+const emailService_1 = require("../services/emailService");
 const getJobs = async (req, res) => {
     try {
         const { department, includeInactive } = req.query;
@@ -109,7 +110,9 @@ const applyForJob = async (req, res) => {
             });
             return;
         }
-        const resumeUrl = `/uploads/${req.file.filename}`;
+        const resumeUrl = req.file.path.startsWith("http")
+            ? req.file.path
+            : `/uploads/${req.file.filename}`;
         const resumeFilename = req.file.originalname;
         const application = new JobApplication_1.JobApplication({
             jobOpeningId: job._id,
@@ -128,10 +131,18 @@ const applyForJob = async (req, res) => {
             status: "SUBMITTED",
         });
         await application.save();
+        // Trigger transactional notifications to HR and candidate asynchronously
+        Promise.all([
+            emailService_1.emailService.sendNewApplicationToHR(application),
+            emailService_1.emailService.sendApplicationConfirmationToCandidate(application),
+        ]).catch((err) => {
+            console.warn("[Email Notification Warning] Failed to dispatch job application emails:", err.message);
+        });
         res.status(201).json({
             success: true,
             message: "Application submitted successfully! Our recruitment team will review your CV.",
             applicationId: application._id,
+            data: application,
         });
     }
     catch (error) {

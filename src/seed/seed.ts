@@ -1,24 +1,32 @@
-import mongoose from "mongoose";
 import dotenv from "dotenv";
 import path from "path";
 
 // Load environment variables
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
+import { connectDB, disconnectDB } from "../config/db";
 import { User } from "../models/User";
 import { Product } from "../models/Product";
 import { JobOpening } from "../models/JobOpening";
 import { ProjectGallery } from "../models/ProjectGallery";
 import { ClientTestimonial } from "../models/ClientTestimonial";
 import { FAQ } from "../models/FAQ";
+import { Certificate } from "../models/Certificate";
+import { Partner } from "../models/Partner";
+import { LandingSection } from "../models/LandingSection";
 import { INITIAL_FAQS } from "../data/initialFaqs";
+import { DEFAULT_CERTIFICATES } from "../controllers/certificateController";
+import { DEFAULT_PARTNERS } from "../controllers/partnerController";
+import { INITIAL_LANDING_CONTENT } from "../data/initialLandingContent";
 
 const seedData = async () => {
-  const mongoURI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/rpglobal";
-  console.log(`[Seed Script] Connecting to MongoDB: ${mongoURI}`);
+  console.log(`[Seed Script] Initializing database connection...`);
 
   try {
-    await mongoose.connect(mongoURI);
+    const connected = await connectDB();
+    if (!connected) {
+      throw new Error("Failed to establish database connection for seeding.");
+    }
     console.log("[Seed Script] Connected successfully.");
 
     // 1. Seed Default Admin User
@@ -811,10 +819,32 @@ const seedData = async () => {
     await FAQ.insertMany(INITIAL_FAQS.map(({ _id, ...rest }) => rest));
     console.log(`✔ Successfully seeded ${INITIAL_FAQS.length} industrial FAQs.`);
 
+    // 7. Clear and Seed Authentic Certificates
+    await Certificate.deleteMany({});
+    await Certificate.insertMany(DEFAULT_CERTIFICATES);
+    console.log(`✔ Successfully seeded ${DEFAULT_CERTIFICATES.length} authentic industry certificates.`);
+
+    // 8. Clear and Seed Industrial Partners
+    await Partner.deleteMany({});
+    await Partner.insertMany(DEFAULT_PARTNERS.map(({ _id, ...rest }) => rest));
+    console.log(`✔ Successfully seeded ${DEFAULT_PARTNERS.length} industrial partners.`);
+
+    // 9. Clear and Seed Landing Page Content Sections
+    await LandingSection.deleteMany({});
+    const sectionEntries = Object.entries(INITIAL_LANDING_CONTENT).map(([sectionKey, data]) => ({
+      sectionKey,
+      data,
+      isPublished: true,
+      lastUpdatedBy: "RP Global Administration Desk",
+    }));
+    await LandingSection.insertMany(sectionEntries);
+    console.log(`✔ Successfully seeded ${sectionEntries.length} landing page CMS sections.`);
+
     console.log("\n=======================================================");
     console.log("  ALL RP GLOBAL INDUSTRIAL DATA SEEDED SUCCESSFULLY!    ");
     console.log("=======================================================\n");
 
+    await disconnectDB();
     process.exit(0);
   } catch (error: any) {
     console.error("[Seed Error]", error);

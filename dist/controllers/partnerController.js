@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.togglePartnerStatus = exports.deletePartner = exports.updatePartner = exports.createPartner = exports.getPartnerById = exports.getAllPartners = exports.getPartners = void 0;
+exports.togglePartnerStatus = exports.deletePartner = exports.updatePartner = exports.createPartner = exports.getPartnerById = exports.getAllPartners = exports.getPartners = exports.DEFAULT_PARTNERS = void 0;
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const Partner_1 = require("../models/Partner");
@@ -15,12 +15,12 @@ if (!fs_1.default.existsSync(uploadDir)) {
     fs_1.default.mkdirSync(uploadDir, { recursive: true });
 }
 // Default initial high-profile industrial partners
-const DEFAULT_PARTNERS = [
+exports.DEFAULT_PARTNERS = [
     {
         _id: "partner-1",
         name: "Tata Chemicals Ltd",
         category: "Industrial Enterprise",
-        logoUrl: "https://upload.wikimedia.org/wikipedia/commons/8/8e/Tata_logo.svg",
+        logoUrl: "/images/partners/tata.svg",
         website: "https://www.tatachemicals.com",
         description: "1,200 KLD ZLD Effluent Recovery & Desalination Infrastructure",
         order: 1,
@@ -32,7 +32,7 @@ const DEFAULT_PARTNERS = [
         _id: "partner-2",
         name: "Cipla Pharmaceuticals",
         category: "Pharma & Biotech",
-        logoUrl: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Cipla_logo.svg",
+        logoUrl: "/images/partners/cipla.svg",
         website: "https://www.cipla.com",
         description: "Ultra-pure Demineralized Water (DM) & Sanitary RO Skids",
         order: 2,
@@ -44,7 +44,7 @@ const DEFAULT_PARTNERS = [
         _id: "partner-3",
         name: "Reliance Industries Limited",
         category: "Industrial Enterprise",
-        logoUrl: "https://upload.wikimedia.org/wikipedia/en/thumb/9/99/Reliance_Industries_Logo.svg/1200px-Reliance_Industries_Logo.svg.png",
+        logoUrl: "/images/partners/reliance.svg",
         website: "https://www.ril.com",
         description: "Heavy Hydrocarbon & Petrochemical ETP Clarification Systems",
         order: 3,
@@ -56,7 +56,7 @@ const DEFAULT_PARTNERS = [
         _id: "partner-4",
         name: "Grundfos Water Technology",
         category: "OEM Equipment Partner",
-        logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Grundfos_logo.svg/1280px-Grundfos_logo.svg.png",
+        logoUrl: "/images/partners/grundfos.svg",
         website: "https://www.grundfos.com",
         description: "High-Efficiency Submersible & Multistage Booster Pump Skids",
         order: 4,
@@ -68,7 +68,7 @@ const DEFAULT_PARTNERS = [
         _id: "partner-5",
         name: "Larsen & Toubro (L&T)",
         category: "EPC & Infrastructure",
-        logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/L%26T.png/640px-L%26T.png",
+        logoUrl: "/images/partners/lt.svg",
         website: "https://www.larsentoubro.com",
         description: "Turnkey Municipal & Mega Industrial Effluent Treatment EPC",
         order: 5,
@@ -80,7 +80,7 @@ const DEFAULT_PARTNERS = [
         _id: "partner-6",
         name: "Dow Water & Process Solutions",
         category: "Technology Licensor",
-        logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Dow_Chemical_Company_logo.svg/1280px-Dow_Chemical_Company_logo.svg.png",
+        logoUrl: "/images/partners/dow.svg",
         website: "https://www.dow.com",
         description: "FilmTec™ Reverse Osmosis & Ion Exchange Resin Media",
         order: 6,
@@ -92,7 +92,7 @@ const DEFAULT_PARTNERS = [
         _id: "partner-7",
         name: "Thermax Global",
         category: "Technology Licensor",
-        logoUrl: "https://upload.wikimedia.org/wikipedia/commons/9/94/Thermax_Logo.svg",
+        logoUrl: "/images/partners/thermax.svg",
         website: "https://www.thermaxglobal.com",
         description: "Condensate Polishing Units & Boiler Feed Demineralizers",
         order: 7,
@@ -104,7 +104,7 @@ const DEFAULT_PARTNERS = [
         _id: "partner-8",
         name: "Sun Pharma Laboratories",
         category: "Pharma & Biotech",
-        logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Sun_Pharma_logo.svg/1280px-Sun_Pharma_logo.svg.png",
+        logoUrl: "/images/partners/sunpharma.svg",
         website: "https://sunpharma.com",
         description: "Zero Discharge Sterile API Wastewater Treatment Systems",
         order: 8,
@@ -117,20 +117,20 @@ const DEFAULT_PARTNERS = [
 function readLocalStore() {
     try {
         if (!fs_1.default.existsSync(jsonStorePath)) {
-            fs_1.default.writeFileSync(jsonStorePath, JSON.stringify(DEFAULT_PARTNERS, null, 2), "utf-8");
-            return DEFAULT_PARTNERS;
+            fs_1.default.writeFileSync(jsonStorePath, JSON.stringify(exports.DEFAULT_PARTNERS, null, 2), "utf-8");
+            return exports.DEFAULT_PARTNERS;
         }
         const raw = fs_1.default.readFileSync(jsonStorePath, "utf-8");
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed) && parsed.length > 0) {
             return parsed;
         }
-        fs_1.default.writeFileSync(jsonStorePath, JSON.stringify(DEFAULT_PARTNERS, null, 2), "utf-8");
-        return DEFAULT_PARTNERS;
+        fs_1.default.writeFileSync(jsonStorePath, JSON.stringify(exports.DEFAULT_PARTNERS, null, 2), "utf-8");
+        return exports.DEFAULT_PARTNERS;
     }
     catch (err) {
         console.error("[Partners Store] Error reading local JSON:", err);
-        return DEFAULT_PARTNERS;
+        return exports.DEFAULT_PARTNERS;
     }
 }
 // Write to JSON file store
@@ -261,7 +261,7 @@ const createPartner = async (req, res) => {
         const { name, category = "Industrial Client", website = "", description = "", order = 0, isActive = true, } = req.body;
         let logoUrl = req.body.logoUrl;
         if (req.file) {
-            logoUrl = `/uploads/${req.file.filename}`;
+            logoUrl = req.file.path;
         }
         if (!name || !name.trim()) {
             res.status(400).json({
@@ -333,7 +333,7 @@ const updatePartner = async (req, res) => {
         const { name, category, website, description, order, isActive, } = req.body;
         let newLogoUrl = req.body.logoUrl;
         if (req.file) {
-            newLogoUrl = `/uploads/${req.file.filename}`;
+            newLogoUrl = req.file.path;
         }
         let updatedDoc = null;
         if ((0, db_1.isDBConnected)()) {

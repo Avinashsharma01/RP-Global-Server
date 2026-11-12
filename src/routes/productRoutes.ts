@@ -7,6 +7,7 @@ import {
   deleteProduct,
 } from "../controllers/productController";
 import { authenticate, requireRole } from "../middlewares/auth";
+import { uploadProductImage } from "../middlewares/upload";
 
 const router = Router();
 
@@ -14,9 +15,21 @@ const router = Router();
 router.get("/", getProducts);
 router.get("/:slug", getProductBySlug);
 
-// Admin-only management routes
-router.post("/", authenticate, requireRole("SUPER_ADMIN", "EDITOR"), createProduct);
-router.put("/:id", authenticate, requireRole("SUPER_ADMIN", "EDITOR"), updateProduct);
+// Admin-only management routes with optional Cloudinary image upload
+router.post(
+  "/",
+  authenticate,
+  requireRole("SUPER_ADMIN", "EDITOR"),
+  uploadProductImage,
+  createProduct
+);
+router.put(
+  "/:id",
+  authenticate,
+  requireRole("SUPER_ADMIN", "EDITOR"),
+  uploadProductImage,
+  updateProduct
+);
 router.delete("/:id", authenticate, requireRole("SUPER_ADMIN"), deleteProduct);
 
 export default router;

@@ -230,17 +230,17 @@ const createCertificate = async (req, res) => {
         const files = req.files;
         if (files) {
             if (files["image"]?.[0]) {
-                imageUrl = `/uploads/${files["image"][0].filename}`;
+                imageUrl = files["image"][0].path;
             }
             else if (files["certificate"]?.[0]) {
-                imageUrl = `/uploads/${files["certificate"][0].filename}`;
+                imageUrl = files["certificate"][0].path;
             }
             else if (files["file"]?.[0]) {
-                imageUrl = `/uploads/${files["file"][0].filename}`;
+                imageUrl = files["file"][0].path;
             }
         }
         else if (req.file) {
-            imageUrl = `/uploads/${req.file.filename}`;
+            imageUrl = req.file.path;
         }
         if (!title || !issuingAuthority || !certificateNumber) {
             res.status(400).json({
@@ -322,17 +322,17 @@ const updateCertificate = async (req, res) => {
         const files = req.files;
         if (files) {
             if (files["image"]?.[0]) {
-                resolveImageUrl = `/uploads/${files["image"][0].filename}`;
+                resolveImageUrl = files["image"][0].path;
             }
             else if (files["certificate"]?.[0]) {
-                resolveImageUrl = `/uploads/${files["certificate"][0].filename}`;
+                resolveImageUrl = files["certificate"][0].path;
             }
             else if (files["file"]?.[0]) {
-                resolveImageUrl = `/uploads/${files["file"][0].filename}`;
+                resolveImageUrl = files["file"][0].path;
             }
         }
         else if (req.file) {
-            resolveImageUrl = `/uploads/${req.file.filename}`;
+            resolveImageUrl = req.file.path;
         }
         if (!(0, db_1.isDBConnected)()) {
             const idx = inMemoryCertificates.findIndex((c) => c._id === id);

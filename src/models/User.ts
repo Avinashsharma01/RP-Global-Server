@@ -1,5 +1,6 @@
 import mongoose, { Document, Schema, Model } from "mongoose";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 
 export type UserRole = "SUPER_ADMIN" | "SALES_MANAGER" | "HR_MANAGER" | "EDITOR";
 
@@ -10,9 +11,12 @@ export interface IUser extends Document {
   role: UserRole;
   isActive: boolean;
   lastLogin?: Date;
+  resetPasswordToken?: string;
+  resetPasswordExpire?: Date;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
+  getResetPasswordToken(): string;
 }
 
 const userSchema = new Schema<IUser>(
@@ -48,6 +52,12 @@ const userSchema = new Schema<IUser>(
     lastLogin: {
       type: Date,
     },
+    resetPasswordToken: {
+      type: String,
+    },
+    resetPasswordExpire: {
+      type: Date,
+    },
   },
   {
     timestamps: true,
@@ -71,6 +81,23 @@ userSchema.methods.comparePassword = async function (
   candidatePassword: string
 ): Promise<boolean> {
   return bcrypt.compare(candidatePassword, this.password);
+};
+
+// Generate and hash password reset token (valid for 1 hour)
+userSchema.methods.getResetPasswordToken = function (): string {
+  // Generate random 32-byte hex token
+  const resetToken = crypto.randomBytes(32).toString("hex");
+
+  // Hash token and store on user model
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  // Set expire time to 1 hour from now
+  this.resetPasswordExpire = new Date(Date.now() + 60 * 60 * 1000);
+
+  return resetToken;
 };
 
 export const User: Model<IUser> =

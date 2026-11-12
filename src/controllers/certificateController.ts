@@ -263,14 +263,14 @@ export const createCertificate = async (
     const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
     if (files) {
       if (files["image"]?.[0]) {
-        imageUrl = `/uploads/${files["image"][0].filename}`;
+        imageUrl = files["image"][0].path;
       } else if (files["certificate"]?.[0]) {
-        imageUrl = `/uploads/${files["certificate"][0].filename}`;
+        imageUrl = files["certificate"][0].path;
       } else if (files["file"]?.[0]) {
-        imageUrl = `/uploads/${files["file"][0].filename}`;
+        imageUrl = files["file"][0].path;
       }
     } else if (req.file) {
-      imageUrl = `/uploads/${req.file.filename}`;
+      imageUrl = req.file.path;
     }
 
     if (!title || !issuingAuthority || !certificateNumber) {
@@ -361,14 +361,14 @@ export const updateCertificate = async (
     const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
     if (files) {
       if (files["image"]?.[0]) {
-        resolveImageUrl = `/uploads/${files["image"][0].filename}`;
+        resolveImageUrl = files["image"][0].path;
       } else if (files["certificate"]?.[0]) {
-        resolveImageUrl = `/uploads/${files["certificate"][0].filename}`;
+        resolveImageUrl = files["certificate"][0].path;
       } else if (files["file"]?.[0]) {
-        resolveImageUrl = `/uploads/${files["file"][0].filename}`;
+        resolveImageUrl = files["file"][0].path;
       }
     } else if (req.file) {
-      resolveImageUrl = `/uploads/${req.file.filename}`;
+      resolveImageUrl = req.file.path;
     }
 
     if (!isDBConnected()) {
@@ -492,4 +492,3 @@ export const deleteCertificate = async (
     });
   }
 };
-

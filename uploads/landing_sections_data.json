@@ -1,0 +1,101 @@
+{
+  "plantCalculator": {
+    "badge": "Sizing calculator",
+    "title": "Plan your plant capacity in seconds.",
+    "description": "Select your target application and test capacity scenarios from 10 to 1,000 KLD. Review immediate hydraulic flow rates, estimated recycled water recovery, and recommended process technology.",
+    "presets": [
+      25,
+      100,
+      250,
+      500,
+      1000
+    ],
+    "applications": [
+      {
+        "id": "sewage",
+        "name": "Residential & Commercial Sewage",
+        "plantType": "Sewage Treatment Plant (STP)",
+        "plantSlug": "sewage-treatment-plants",
+        "technology": "MBBR or SBR biological aeration & clarification",
+        "designObjective": "BOD < 10 ppm and TSS < 10 ppm for flush and landscape irrigation reuse.",
+        "reusePercent": 75,
+        "description": "Engineered for townships, IT campuses, and commercial developments seeking zero fresh-water waste in toilet flushing and horticulture.",
+        "processChain": [
+          "Screening & grit removal",
+          "Flow equalisation & pumping",
+          "Biological aeration (MBBR/SBR)",
+          "Secondary clarification",
+          "Filtration & UV disinfection"
+        ]
+      },
+      {
+        "id": "effluent",
+        "name": "Industrial Chemical & Dye Effluent",
+        "plantType": "Effluent Treatment Plant (ETP)",
+        "plantSlug": "effluent-treatment-plants",
+        "technology": "Physico-chemical coagulation & biological treatment",
+        "designObjective": "COD/BOD/heavy metal reduction conforming to strict SPCB/CPCB industrial discharge limits.",
+        "reusePercent": 85,
+        "description": "Heavy-duty skid systems engineered for textile dyeing, pharmaceuticals, electroplating, and manufacturing effluent streams.",
+        "processChain": [
+          "Screening & oil skimmer",
+          "Chemical dosing & flash mixing",
+          "Flocculation & lamella settling",
+          "Aerobic biological reactor",
+          "Pressure sand & carbon filter"
+        ]
+      },
+      {
+        "id": "boiler_pure",
+        "name": "High-Pressure Boiler Feed & Pure Water",
+        "plantType": "Demineralization (DM) Plant",
+        "plantSlug": "demineralization-plants",
+        "technology": "Two-bed ion exchange with mixed-bed polishing",
+        "designObjective": "Conductivity < 0.2 µS/cm and silica < 0.02 ppm for zero-scaling thermal operations.",
+        "reusePercent": 95,
+        "description": "Ion-exchange columns built for power utilities, paper mills, and pharmaceutical loops demanding zero electrical conductivity.",
+        "processChain": [
+          "Feed-water dual media filter",
+          "Strong acid cation exchanger",
+          "Degasser tower for dissolved CO₂",
+          "Strong base anion exchanger",
+          "Mixed bed polish & conductivity monitor"
+        ]
+      },
+      {
+        "id": "reverse_osmosis",
+        "name": "Groundwater & High-TDS Desalination",
+        "plantType": "Reverse Osmosis (RO) Plant",
+        "plantSlug": "reverse-osmosis-plants",
+        "technology": "High-pressure membrane separation with anti-scalant dosing",
+        "designObjective": "Up to 80% permeate recovery with >99.2% salt rejection across high-TDS feeds.",
+        "reusePercent": 80,
+        "description": "Multi-stage brackish and sea water reverse osmosis skids equipped with energy recovery turbines and PLC control.",
+        "processChain": [
+          "Raw water multi-grade filter",
+          "Anti-scalant & micron cartridge",
+          "High-pressure booster pump",
+          "Spiral wound RO membrane rack",
+          "Permeate storage & CIP system"
+        ]
+      },
+      {
+        "id": "softener",
+        "name": "Hard-Water Scale Prevention",
+        "plantType": "Water Softening Plant",
+        "plantSlug": "water-softening-plants",
+        "technology": "Sodium-cycle cation resin with automatic multi-port valve",
+        "designObjective": "Hardness reduction to < 5 ppm as CaCO₃ to protect cooling towers, chillers, and boilers.",
+        "reusePercent": 98,
+        "description": "Turnkey industrial water softeners eliminating calcium and magnesium scale formation across heat-exchange equipment.",
+        "processChain": [
+          "Feed-water hardness testing",
+          "Inlet particulate pre-filter",
+          "Strong cation ion-exchange resin",
+          "Automated brine suction regeneration",
+          "Final rinse & softened water supply"
+        ]
+      }
+    ]
+  }
+}

@@ -55,7 +55,7 @@ export const createGalleryItem = async (
 
     let imageUrl = req.body.imageUrl;
     if (req.file) {
-      imageUrl = `/uploads/${req.file.filename}`;
+      imageUrl = req.file.path;
     }
 
     if (!title || !category || !capacityKLD || !location || !clientSector || !imageUrl) {
@@ -204,7 +204,7 @@ export const updateGalleryItem = async (
     }
 
     if (req.file) {
-      item.imageUrl = `/uploads/${req.file.filename}`;
+      item.imageUrl = req.file.path;
       // Add to images list if not present
       if (!item.images) item.images = [];
       if (!item.images.includes(item.imageUrl)) {
@@ -275,7 +275,7 @@ export const uploadProjectImages = async (
     // Files uploaded via multipart
     if (req.files && Array.isArray(req.files)) {
       req.files.forEach((file: Express.Multer.File) => {
-        newImageUrls.push(`/uploads/${file.filename}`);
+        newImageUrls.push(file.path);
       });
     }
 

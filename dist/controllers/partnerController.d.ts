@@ -1,4 +1,16 @@
 import { Request, Response } from "express";
+export declare const DEFAULT_PARTNERS: {
+    _id: string;
+    name: string;
+    category: string;
+    logoUrl: string;
+    website: string;
+    description: string;
+    order: number;
+    isActive: boolean;
+    createdAt: string;
+    updatedAt: string;
+}[];
 /**
  * Public: Get active partners for landing page
  */

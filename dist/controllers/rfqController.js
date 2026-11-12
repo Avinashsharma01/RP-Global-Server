@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteLead = exports.addLeadNote = exports.updateLeadStatus = exports.getLeadById = exports.getLeads = exports.submitRFQ = void 0;
 const Lead_1 = require("../models/Lead");
+const emailService_1 = require("../services/emailService");
 const submitRFQ = async (req, res) => {
     try {
         const { fullName, companyName, email, phone, plantCategory, requiredCapacityKLD, rawWaterSource, projectLocation, message, source, } = req.body;
@@ -31,7 +32,9 @@ const submitRFQ = async (req, res) => {
         let attachedReportUrl = undefined;
         let attachedReportFilename = undefined;
         if (req.file) {
-            attachedReportUrl = `/uploads/${req.file.filename}`;
+            attachedReportUrl = req.file.path.startsWith("http")
+                ? req.file.path
+                : `/uploads/${req.file.filename}`;
             attachedReportFilename = req.file.originalname;
         }
         const lead = new Lead_1.Lead({
@@ -51,10 +54,18 @@ const submitRFQ = async (req, res) => {
             status: "NEW",
         });
         await lead.save();
+        // Trigger transactional notifications asynchronously without blocking HTTP response
+        Promise.all([
+            emailService_1.emailService.sendNewRFQToAdmin(lead),
+            emailService_1.emailService.sendRFQConfirmationToClient(lead),
+        ]).catch((err) => {
+            console.warn("[Email Notification Warning] Failed to dispatch RFQ emails:", err.message);
+        });
         res.status(201).json({
             success: true,
             message: "Thank you! Your Technical RFQ has been registered. Our engineering desk will review your water parameters and contact you shortly.",
             leadId: lead._id,
+            data: lead,
         });
     }
     catch (error) {

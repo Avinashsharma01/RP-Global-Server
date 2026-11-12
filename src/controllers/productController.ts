@@ -63,7 +63,28 @@ export const createProduct = async (
   res: Response
 ): Promise<void> => {
   try {
-    const product = new Product(req.body);
+    const productData = { ...req.body };
+    if (req.file) {
+      productData.imageUrl = req.file.path;
+    }
+
+    if (typeof productData.keyFeatures === "string") {
+      try { productData.keyFeatures = JSON.parse(productData.keyFeatures); } catch {}
+    }
+    if (typeof productData.technicalSpecs === "string") {
+      try { productData.technicalSpecs = JSON.parse(productData.technicalSpecs); } catch {}
+    }
+    if (typeof productData.processSteps === "string") {
+      try { productData.processSteps = JSON.parse(productData.processSteps); } catch {}
+    }
+    if (typeof productData.comparisonMatrix === "string") {
+      try { productData.comparisonMatrix = JSON.parse(productData.comparisonMatrix); } catch {}
+    }
+    if (typeof productData.applications === "string") {
+      try { productData.applications = JSON.parse(productData.applications); } catch {}
+    }
+
+    const product = new Product(productData);
     await product.save();
 
     res.status(201).json({
@@ -86,7 +107,28 @@ export const updateProduct = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const product = await Product.findByIdAndUpdate(id, req.body, {
+    const updateData = { ...req.body };
+    if (req.file) {
+      updateData.imageUrl = req.file.path;
+    }
+
+    if (typeof updateData.keyFeatures === "string") {
+      try { updateData.keyFeatures = JSON.parse(updateData.keyFeatures); } catch {}
+    }
+    if (typeof updateData.technicalSpecs === "string") {
+      try { updateData.technicalSpecs = JSON.parse(updateData.technicalSpecs); } catch {}
+    }
+    if (typeof updateData.processSteps === "string") {
+      try { updateData.processSteps = JSON.parse(updateData.processSteps); } catch {}
+    }
+    if (typeof updateData.comparisonMatrix === "string") {
+      try { updateData.comparisonMatrix = JSON.parse(updateData.comparisonMatrix); } catch {}
+    }
+    if (typeof updateData.applications === "string") {
+      try { updateData.applications = JSON.parse(updateData.applications); } catch {}
+    }
+
+    const product = await Product.findByIdAndUpdate(id, updateData, {
       new: true,
       runValidators: true,
     });

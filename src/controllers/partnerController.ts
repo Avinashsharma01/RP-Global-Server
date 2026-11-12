@@ -14,7 +14,7 @@ if (!fs.existsSync(uploadDir)) {
 }
 
 // Default initial high-profile industrial partners
-const DEFAULT_PARTNERS = [
+export const DEFAULT_PARTNERS = [
   {
     _id: "partner-1",
     name: "Tata Chemicals Ltd",
@@ -274,7 +274,7 @@ export const createPartner = async (req: Request, res: Response): Promise<void> 
 
     let logoUrl = req.body.logoUrl;
     if (req.file) {
-      logoUrl = `/uploads/${req.file.filename}`;
+      logoUrl = req.file.path;
     }
 
     if (!name || !name.trim()) {
@@ -360,7 +360,7 @@ export const updatePartner = async (req: Request, res: Response): Promise<void> 
 
     let newLogoUrl = req.body.logoUrl;
     if (req.file) {
-      newLogoUrl = `/uploads/${req.file.filename}`;
+      newLogoUrl = req.file.path;
     }
 
     let updatedDoc: any = null;

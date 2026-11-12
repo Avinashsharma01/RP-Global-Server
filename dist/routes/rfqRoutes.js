@@ -4,9 +4,10 @@ const express_1 = require("express");
 const rfqController_1 = require("../controllers/rfqController");
 const auth_1 = require("../middlewares/auth");
 const upload_1 = require("../middlewares/upload");
+const rateLimiter_1 = require("../middlewares/rateLimiter");
 const router = (0, express_1.Router)();
-// Public RFQ submission with optional water test report attachment
-router.post("/", upload_1.uploadReport, rfqController_1.submitRFQ);
+// Public RFQ submission with rate limiter and optional water test report attachment
+router.post("/", rateLimiter_1.rfqLimiter, upload_1.uploadReport, rfqController_1.submitRFQ);
 // Protected Admin CRM routes
 router.get("/", auth_1.authenticate, (0, auth_1.requireRole)("SUPER_ADMIN", "SALES_MANAGER"), rfqController_1.getLeads);
 router.get("/:id", auth_1.authenticate, (0, auth_1.requireRole)("SUPER_ADMIN", "SALES_MANAGER"), rfqController_1.getLeadById);

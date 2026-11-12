@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.disconnectDB = exports.isDBConnected = exports.connectDB = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
+const localMongo_1 = require("./localMongo");
 // Disable command buffering so queries fail immediately when DB is disconnected
 mongoose_1.default.set("bufferCommands", false);
 mongoose_1.default.set("strictQuery", false);
@@ -14,6 +15,18 @@ const connectDB = async () => {
         return true;
     }
     const mongoURI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/rpglobal";
+    // If local connection specified, ensure persistent local MongoDB is running
+    const isLocal = mongoURI.includes("127.0.0.1") || mongoURI.includes("localhost");
+    if (isLocal) {
+        try {
+            const portMatch = mongoURI.match(/:(\d+)/);
+            const port = portMatch ? parseInt(portMatch[1], 10) : 27017;
+            await (0, localMongo_1.ensureLocalMongo)(port);
+        }
+        catch (err) {
+            console.warn("[MongoDB Warning] Could not ensure local MongoDB:", err.message);
+        }
+    }
     try {
         // Event listeners
         mongoose_1.default.connection.on("connected", () => {
@@ -26,7 +39,7 @@ const connectDB = async () => {
             console.warn("[MongoDB] Disconnected from database.");
         });
         await mongoose_1.default.connect(mongoURI, {
-            serverSelectionTimeoutMS: 3000,
+            serverSelectionTimeoutMS: 5000,
         });
         console.log(`[MongoDB] Connected to database: ${mongoose_1.default.connection.name}`);
         return true;
@@ -46,6 +59,7 @@ const disconnectDB = async () => {
         await mongoose_1.default.disconnect();
         console.log("[MongoDB] Disconnected successfully.");
     }
+    await (0, localMongo_1.stopLocalMongo)();
 };
 exports.disconnectDB = disconnectDB;
 //# sourceMappingURL=db.js.map

@@ -9,11 +9,12 @@ import {
 } from "../controllers/rfqController";
 import { authenticate, requireRole } from "../middlewares/auth";
 import { uploadReport } from "../middlewares/upload";
+import { rfqLimiter } from "../middlewares/rateLimiter";
 
 const router = Router();
 
-// Public RFQ submission with optional water test report attachment
-router.post("/", uploadReport, submitRFQ);
+// Public RFQ submission with rate limiter and optional water test report attachment
+router.post("/", rfqLimiter, uploadReport, submitRFQ);
 
 // Protected Admin CRM routes
 router.get("/", authenticate, requireRole("SUPER_ADMIN", "SALES_MANAGER"), getLeads);

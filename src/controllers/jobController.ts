@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { JobOpening } from "../models/JobOpening";
 import { JobApplication } from "../models/JobApplication";
 import { AuthenticatedRequest } from "../middlewares/auth";
+import { emailService } from "../services/emailService";
 
 export const getJobs = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -139,7 +140,9 @@ export const applyForJob = async (
       return;
     }
 
-    const resumeUrl = `/uploads/${req.file.filename}`;
+    const resumeUrl = req.file.path.startsWith("http")
+      ? req.file.path
+      : `/uploads/${req.file.filename}`;
     const resumeFilename = req.file.originalname;
 
     const application = new JobApplication({
@@ -161,11 +164,23 @@ export const applyForJob = async (
 
     await application.save();
 
+    // Trigger transactional notifications to HR and candidate asynchronously
+    Promise.all([
+      emailService.sendNewApplicationToHR(application),
+      emailService.sendApplicationConfirmationToCandidate(application),
+    ]).catch((err) => {
+      console.warn(
+        "[Email Notification Warning] Failed to dispatch job application emails:",
+        err.message
+      );
+    });
+
     res.status(201).json({
       success: true,
       message:
         "Application submitted successfully! Our recruitment team will review your CV.",
       applicationId: application._id,
+      data: application,
     });
   } catch (error: any) {
     res.status(500).json({

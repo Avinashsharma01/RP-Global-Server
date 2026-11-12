@@ -7,8 +7,11 @@ export interface IUser extends Document {
     role: UserRole;
     isActive: boolean;
     lastLogin?: Date;
+    resetPasswordToken?: string;
+    resetPasswordExpire?: Date;
     createdAt: Date;
     updatedAt: Date;
     comparePassword(candidatePassword: string): Promise<boolean>;
+    getResetPasswordToken(): string;
 }
 export declare const User: Model<IUser>;

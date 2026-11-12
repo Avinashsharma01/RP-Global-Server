@@ -4,11 +4,12 @@ const express_1 = require("express");
 const jobController_1 = require("../controllers/jobController");
 const auth_1 = require("../middlewares/auth");
 const upload_1 = require("../middlewares/upload");
+const rateLimiter_1 = require("../middlewares/rateLimiter");
 const router = (0, express_1.Router)();
 // Public routes
 router.get("/", jobController_1.getJobs);
 router.get("/:identifier", jobController_1.getJobBySlugOrId);
-router.post("/:id/apply", upload_1.uploadResume, jobController_1.applyForJob);
+router.post("/:id/apply", rateLimiter_1.jobApplyLimiter, upload_1.uploadResume, jobController_1.applyForJob);
 // Admin recruitment ATS routes
 router.post("/", auth_1.authenticate, (0, auth_1.requireRole)("SUPER_ADMIN", "HR_MANAGER"), jobController_1.createJob);
 router.put("/:id", auth_1.authenticate, (0, auth_1.requireRole)("SUPER_ADMIN", "HR_MANAGER"), jobController_1.updateJob);

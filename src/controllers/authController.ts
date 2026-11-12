@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 import { User, IUser } from "../models/User";
 import { AuthenticatedRequest } from "../middlewares/auth";
+import { emailService } from "../services/emailService";
 
 export const login = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -142,6 +144,122 @@ export const updatePassword = async (
     res.status(500).json({
       success: false,
       message: "Failed to update password.",
+      error: error.message,
+    });
+  }
+};
+
+/**
+ * Request password reset link (public)
+ */
+export const forgotPassword = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      res.status(400).json({
+        success: false,
+        message: "Email is required to request a password reset.",
+      });
+      return;
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+    if (!user) {
+      // Return 200 with generic success to prevent email enumeration
+      res.status(200).json({
+        success: true,
+        message:
+          "If an administrator account with that email exists, a password reset link has been dispatched.",
+      });
+      return;
+    }
+
+    // Get reset token and save
+    const resetToken = user.getResetPasswordToken();
+    await user.save();
+
+    // Reset URL
+    const clientUrl = process.env.CLIENT_URL || "http://localhost:3000";
+    const resetUrl = `${clientUrl}/admin/reset-password/${resetToken}`;
+
+    // Send email asynchronously
+    void emailService.sendPasswordResetEmail(user.email, resetUrl, user.fullName);
+
+    res.status(200).json({
+      success: true,
+      message:
+        "If an administrator account with that email exists, a password reset link has been dispatched.",
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: "Could not process password reset request.",
+      error: error.message,
+    });
+  }
+};
+
+/**
+ * Reset password with valid token (public)
+ */
+export const resetPassword = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { token } = req.params;
+    const { newPassword } = req.body;
+
+    if (!newPassword || newPassword.length < 6) {
+      res.status(400).json({
+        success: false,
+        message: "New password must be at least 6 characters long.",
+      });
+      return;
+    }
+
+    const rawToken = Array.isArray(token) ? token[0] : token;
+    if (!rawToken) {
+      res.status(400).json({
+        success: false,
+        message: "Invalid reset token provided.",
+      });
+      return;
+    }
+
+    // Hash the token from url params to compare with database
+    const hashedToken = crypto.createHash("sha256").update(rawToken).digest("hex");
+
+    const user = await User.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpire: { $gt: new Date() },
+    }).select("+password");
+
+    if (!user) {
+      res.status(400).json({
+        success: false,
+        message: "Password reset link is invalid or has expired.",
+      });
+      return;
+    }
+
+    // Set new password
+    user.password = newPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Password has been successfully updated. You may now log in.",
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: "Could not reset password.",
       error: error.message,
     });
   }
